@@ -1,0 +1,198 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = pl_PL
+
+% $Id:$
+
+%Author: Wojciech Domski
+%Szablon do ząłożeń projektowych, raportu i dokumentacji z sterowników robotów
+%Wersja v.1.0.0
+%
+
+
+%% Konfiguracja:
+\newcommand{\kurs}{Sterowniki robot\'{o}w}
+\newcommand{\formakursu}{Projekt}
+
+%odkomentuj właściwy typ projektu
+\newcommand{\doctype}{Etap II}
+%\newcommand{\doctype}{Raport}
+%\newcommand{\doctype}{Dokumentacja}
+
+%wpisz nazwę projektu
+\newcommand{\projectname}{Miecz \'{S}wietlny}
+
+%wpisz akronim projektu
+\newcommand{\acronim}{Mi\'{S}}
+
+%zmaiast X wpisz numer grupy projektowej
+\newcommand{\nrgrupy}{4}
+%wpisz Imię i nazwisko oraz numer albumu
+\newcommand{\osobaA}{Patryk \textsc{Knapik}, 226302}
+%w przypadku projektu jednoosobowego usuń zawartość nowej komendy
+\newcommand{\osobaB}{Wojciech \textsc{Kosicki}, 234506}
+
+%wpisz termin w formie, jak poniżej dzień, parzystość, godzina
+\newcommand{\termin}{wtTP11}
+
+%wpisz imię i nazwisko prowadzącego
+\newcommand{\prowadzacy}{mgr in\.{z}. Wojciech \textsc{Domski}}
+
+\documentclass[10pt, a4paper]{article}
+% W nawiasie klamrowym podana jest klasa dokumentu. Standardowe klasy artykułu
+% to: article, amsart, scrartcl, artikel1, artikel2, artikel3.
+% W nawiasie prostokątnym deklarowane są opcje dokumentu. Zamiast 10pt
+% można podać 11pt lub 12pt. Dokument w dwóch kolumnach uzyskuje się po
+% wpisaniu opcji twocolumn, 
+
+\include{preambula}
+	
+\begin{document}
+
+\def\tablename{Tabela}	%zmienienie nazwy tabel z Tablica na Tabela
+
+\begin{titlepage}
+	\begin{center}
+		\textsc{\LARGE \formakursu}\\[1cm]		
+		\textsc{\Large \kurs}\\[0.5cm]		
+		\rule{\textwidth}{0.08cm}\\[0.4cm]
+		{\huge \bfseries \doctype}\\[1cm]
+		{\huge \bfseries \projectname}\\[0.5cm]
+		{\huge \bfseries \acronim}\\[0.4cm]
+		\rule{\textwidth}{0.08cm}\\[1cm]
+		
+		\begin{flushright} \large
+		\emph{Skład grupy (\nrgrupy):}\\
+		\osobaA\\
+		\osobaB\\[0.4cm]
+		
+		\emph{Termin: }\termin\\[0.4cm]
+
+		\emph{Prowadzący:} \\
+		\prowadzacy \\
+		
+		\end{flushright}
+		
+		\vfill
+		
+		{\large \today}
+	\end{center}	
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Wstęp}
+\label{sec:Wstęp}
+Celem projektu jest skonstruowanie miecza świetlnego, który będzie wydawał charakterystyczne dźwięki w zależności od poruszania nim przez użytkownika. 
+Niniejszy raport opisuje jakie aspekty projektu udało się z powodzeniem zrealizować do dnia 15 maja 2018 roku. Opisuje także ogólny przebieg prac oraz podjęte decyzje przy rozwiązywaniu problemów. 
+
+\section{Wygenerowanie projektu bazowego w CubeMX}
+Pierwszym zadaniem było dobranie odpowiednich peryferiów wykorzystywanych w projekcie i skonfigurowanie ich w środowisku CubeMX. Wygenerowany kod był podstawą do rozpoczęcia pracy nad projektem. 
+\begin{enumerate}
+		\item Aktywowane PINy
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{conf1.png}
+	\end{figure}
+	\newpage
+			\item Konfiguracja zegara
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{conf2.png}
+	\end{figure}
+				\item Okno Middlewares
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{conf9.png}
+	\end{figure}
+	\newpage
+					\item Ustawienia parametrów
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{conf3.png}
+	\end{figure}
+		\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{conf4.png}
+	\end{figure}
+		\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{conf5.png}
+	\end{figure}
+		\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{conf6.png}
+	\end{figure}
+		\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{conf7.png}
+	\end{figure}
+		\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{conf8.png}
+	\end{figure}
+\end{enumerate}
+	\section{Implementacja obsługi DAC}
+Płytka STM32L476G-DISCO wyposażona jest w DAC stereo CS43L22 firmy Cirrus Logic. Do zaprogramowania tego peryferium została wykorzystana biblioteka BSP dostarczona przez firmę ST. Urządzenie to konfigurowane jest przez interfejs I$^2$C, a sygnał audio wysyłany jest przez interfejs SAI. Dane audio są kopiowane z pamięci mikrokontrolera na interfejs SAI z wykorzystaniem układu DMA, pozwala to odciążyć rdzeń mikrokontrolera, a także zapewnić płynność dźwięku. Na tym etapie mikrokontroler generuje przebieg sinusoidalny o konfigurowalnej częstotliwości sygnału, a także o zadanej częstotliwości próbkowania, która nie musi być wysoka z uwagi na to, że wysoka dokładność odwzorowania dźwięku nie jest konieczna, w naszym projekcie częstotliwość próbkowania została ustawiona na 16kHz. Z uwagi na to, że rdzeń generuje dźwięk wolniej niż ten jest odtwarzany konieczne jest zastosowanie osobnego buforu do generowania dźwięku i osobnego do jego odtwarzania, po zakończeniu generowania dźwięku w danym buforze, oraz po zakończeniu odtwarzania próbki wskaźniki na bufory zostana zamienione, dzięki temu procesor będzie mógł generować dźwięk podczas gdy inny dźwięk ( o innej częstotliwości) jest odtwarzany bez przeszkód. Obecnie trwają prace nad stworzeniem formuły która pozwoli syntezować dźwięk miecza świetlnego, gdy prace te zostaną zakończone, formuła zostanie przeniesiona do osobnej funkcji która będzie generować dźwięk na bazie odczytu z akcelerometru do zadanego bufora. Budowa sygnału audio jest bardzo prosta, po ustaleniu częstotliwości próbkowania należy wygenerować tablice amplitud które są typu \textit{uint16\_t} czyli liczby z przedziału od 0 do 65535, biorąc pod uwagę, że jedna sekunda dźwięku składa się z wybranej wcześniej ilości próbek. Cyfrowe filtry DFSDM zostały włączone tylko dlatego, że biblioteka audio BSP ich wymaga, ale nie są one wykorzystywane w tym projekcie.
+	\section{Implementacja obsługi akcelerometru i żyroskopu}
+	Z powodzeniem udało się zaimplementować obsługę akcelerometru poprzez komunikację SPI. Aby odwzorować ruch miecza w bardziej precyzyjny sposób, postanowiono dodać obsługę poprzez komunikację SPI także żyroskopu. Na płytce STM32L476G-DISCO, żyroskop znajduje się na L3GD20, zaś akcelerometr na LSM303C. Wykorzystano dokumentacje w celu zapoznania się odpowiednia konfiguracja i uruchomieniem tych peryferiów. Dużą pomocą były przykładowe funkcje obsługi tych peryferiów w BSP, opublikowanym przez firmę ST. Obsługę tych urządzeń podzielono na dwie warstwy interfejsu. Pierwsza warstwa to napisane biblioteki accel oraz gyros (.c i .h). Druga warstwa zaś to biblioteki lsm i l3g (.c i .h). Zastosowanie dwóch warstw interfejsu może bardzo pomóc w sytuacji gdy trzeba by było przerobić program do działania na innym sterowniku. W takiej sytuacji nie musimy zmieniać całego programu, tylko jedną warstwę interfejsu. 
+Postanowiono ustawić wysokie zakresy działania mierników. Dla żyroskopu była to wartość 2000 DPS (stopnie na sekundę), a dla akcelerometru była to wartość 8G (przyśpieszeń ziemskich). Skalibrowano takie ustawienia by nie dochodziło do saturacji odczytów peryferiów. Inaczej, żeby algorytm proporcjonalnie generował dźwięk ruchu miecza w przestrzeni, nawet przy zamaszystych i szybkich ruchach. 
+W projekcie zaimplementowano także biblioteki akcelstruct.h oraz gryostruct.h. Zawierają one struktury do inicjalizacji i konfiguracji tych peryferiów. Ostatnią istotną biblioteką napisaną na potrzebę projektu to komun.h/komun.c. Odpowiedzialna jest ona za skonfigurowanie i przeprowadzenie komunikacji przez kanał SPI2. Biblioteka obsługuje inicjalizację i komunikację z zarówno akcelerometrem jak i żyroskopem. 
+W celach testowych, odczyty peryferiów były przesyłane przez komunikację UART na komputer, w różnych odstępach czasu. Wyniki testów zakończyły się powodzeniem. Następnym krokiem będzie dostosowanie wyjściowych zmiennych do potrzeb algorytmu generującego dźwięk w głównej pętli programu. 
+Idea powiązań klas została przedstawiona na końcu dokumentu:
+	\begin{figure}[b]
+	\centering
+	\includegraphics[width=\linewidth]{bilio.png}
+	\end{figure}
+
+\section{Projekt miecza świetlnego}	
+Do miecza jest wykorzystana zaprojektowana konstrukcja z plexi. W szerszej rękojeści znajduje się sterownik STM32. Oświetlenie miecza bazuje na trzech diodach RGB zamontowanych na początku miecza, w środku i na czubku. Są one sterowane przez sygnał PWM. 
+	
+
+\newpage
+\addcontentsline{toc}{section}{Bibilografia}
+\bibliography{bibliografia}
+\bibliographystyle{plain}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

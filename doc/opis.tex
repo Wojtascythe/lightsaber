@@ -1,0 +1,246 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = pl_PL
+
+% $Id:$
+
+%Author: Wojciech Domski
+%Szablon do ząłożeń projektowych, raportu i dokumentacji z sterowników robotów
+%Wersja v.1.0.0
+%
+
+
+%% Konfiguracja:
+\newcommand{\kurs}{Sterowniki robot\'{o}w}
+\newcommand{\formakursu}{Projekt}
+
+%odkomentuj właściwy typ projektu
+\newcommand{\doctype}{Za\l{}o\.{z}enia projektowe}
+%\newcommand{\doctype}{Raport}
+%\newcommand{\doctype}{Dokumentacja}
+
+%wpisz nazwę projektu
+\newcommand{\projectname}{Miecz \'{S}wietlny}
+
+%wpisz akronim projektu
+\newcommand{\acronim}{Mi\'{S}}
+
+%zmaiast X wpisz numer grupy projektowej
+\newcommand{\nrgrupy}{4}
+%wpisz Imię i nazwisko oraz numer albumu
+\newcommand{\osobaA}{Patryk \textsc{Knapik}, 226302}
+%w przypadku projektu jednoosobowego usuń zawartość nowej komendy
+\newcommand{\osobaB}{Wojciech \textsc{Kosicki}, 234506}
+
+%wpisz termin w formie, jak poniżej dzień, parzystość, godzina
+\newcommand{\termin}{wtTP11}
+
+%wpisz imię i nazwisko prowadzącego
+\newcommand{\prowadzacy}{mgr in\.{z}. Wojciech \textsc{Domski}}
+
+\documentclass[10pt, a4paper]{article}
+% W nawiasie klamrowym podana jest klasa dokumentu. Standardowe klasy artykułu
+% to: article, amsart, scrartcl, artikel1, artikel2, artikel3.
+% W nawiasie prostokątnym deklarowane są opcje dokumentu. Zamiast 10pt
+% można podać 11pt lub 12pt. Dokument w dwóch kolumnach uzyskuje się po
+% wpisaniu opcji twocolumn, 
+
+\include{preambula}
+	
+\begin{document}
+
+\def\tablename{Tabela}	%zmienienie nazwy tabel z Tablica na Tabela
+
+\begin{titlepage}
+	\begin{center}
+		\textsc{\LARGE \formakursu}\\[1cm]		
+		\textsc{\Large \kurs}\\[0.5cm]		
+		\rule{\textwidth}{0.08cm}\\[0.4cm]
+		{\huge \bfseries \doctype}\\[1cm]
+		{\huge \bfseries \projectname}\\[0.5cm]
+		{\huge \bfseries \acronim}\\[0.4cm]
+		\rule{\textwidth}{0.08cm}\\[1cm]
+		
+		\begin{flushright} \large
+		\emph{Skład grupy (\nrgrupy):}\\
+		\osobaA\\
+		\osobaB\\[0.4cm]
+		
+		\emph{Termin: }\termin\\[0.4cm]
+
+		\emph{Prowadzący:} \\
+		\prowadzacy \\
+		
+		\end{flushright}
+		
+		\vfill
+		
+		{\large \today}
+	\end{center}	
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Opis projektu}
+\label{sec:OpisProjektu}
+Projekt zakłada stworzenie urządzenia które będzie wykorzystywało dane z akcelerometru do generowania dźwięków o odpowiedniej częstotliwości za pomocą układu DAC. Dźwięki będą generowane w taki sposób, żeby imitowały pracę poruszanego miecza świetlnego znanego chociażby z filmów pt. \textit{Star Wars}. 
+
+\section{Założenia projektowe} %jak będzie buczeć inaczej w idlu i inaczej podczas ruszania to już będę zadowolony
+	\begin{flushleft}
+	Założenia podstawowe funkcjonalności:\\
+	\end{flushleft}
+	\begin{itemize}
+		\item Dioda LED RGB imitująca ostrze miecza.
+		\item Wybór koloru diody przez użytkownika za pomocą przycisku z palety kolorów w jakich najczęściej występują miecze świetlne.
+		\item Miecz ma generować dźwięk, przypominający ten znany z miecza świetlnego, za pomocą DACa - ruch mieczem ma zmieniać ton i częstotliwość dzwięku w podobny sposób jak robi to miecz świetlny.
+		\item Możliwość włączania i wyłączania miecza za pomocą przycisku.
+		\item Miecz wyłączony nie generuje dźwięków, a także wyłącza LED RGB.
+	\end{itemize}
+	\vspace{5mm}
+	\begin{flushleft}
+	Założenia dodatkowe funkcjonalności (wdrażane po tym jak założenia podstawowe funkcjonalności zostaną spełnione):\\
+	\end{flushleft}
+	\begin{itemize}
+		\item Możliwość wyboru koloru z palety True color (24-bit).
+		\item Dźwięk włączania i wyłączania miecza odtwarzany z zewnętrznej pamięci flash komunikującej się z mikrokontrolerem za pomocą QSPI.
+		\item Szkielet na baterię (np. power bank USB), głośnik oraz pasek LED RGB.
+	\end{itemize}
+	\vspace{5mm}
+	\begin{flushleft}
+	Założenia budowy programu:\\
+	\end{flushleft}
+	\begin{itemize}
+		\item Implementacja bazująca na przerwaniach - główna pętla obsługuje zdarzenia po ustawieniu flagi w przerwaniu.
+		\item Wykorzystanie programu \textit{CubeMX} dostarczanego przez firmę \textit{ST} w celu wygenerowania kodu potrzebnego do w/w peryferiów.
+	\end{itemize}
+
+	
+
+\section{Harmonogram pracy} %tutaj powinny być chyba kamienie milowe i wykres Gantta, DODAC TERMINY!!
+	\begin{flushleft}
+	Kamienie milowe zostały pogrubione i podkreślone\\
+	\end{flushleft}
+	\begin{enumerate}
+		\item Wygenerowanie projektu bazowego w CubeMX.\\
+		\underline {Termin: 06.03 - 08.03}
+		\item Implementacja obsługi DACa.\\
+		\underline {Termin: 09.03 - 22.03}
+		\item Implementacja obsługi akcelerometru.\\
+		\underline {Termin: 09.03 - 22.03}
+		\item Opracowanie algorytmu generującego dźwięk zbliżony do dźwięku miecza świetlnego.\\
+		\underline {Termin: 15.03 - 29.03}
+		\item Obsługa diody LED RGB imitującej ostrze za pomocą PWM.\\
+		\underline {Termin: 30.03 - 02.04}
+		\textbf{\item \underline{Implementacje głównej pętli programu (połączenie akcelerometru z układem DAC).}}\\
+		\underline {Termin: 03.04 - 09.04}
+		\item Opracowanie wstępnej dokumentacji technicznej po spełnieniu założeń podstawowych.\\
+		\underline {Termin: 10.04 - 17.04}
+		\item Implementacja obsługi pamięci flash oraz wgrywanie dźwięków za pomocą USB.\\
+		\underline {Termin: 18.04 - 02.05}
+		\item Implementacja odgrywania dźwięków włączania i wyłączania miecza świetlnego.\\
+		\underline {Termin: 03.05 - 10.05}
+		\item Implementacja wyboru koloru z palety True color (24-bit) - obsługa przycisków, wyświetlacza i PWM.\\
+		\underline {Termin: 18.04 - 25.04}
+		\textbf{\item \underline{Rozbudowa głównej pętli programu o obsługę pamięci flash i wyboru koloru z palety.}}\\
+		\underline {Termin: 11.05 - 18.05}
+		\item Aktualizacja dokumentacji technicznej po spełnieniu założeń dodatkowych.\\
+		\underline {Termin: 26.04 - 22.05}
+		\item Budowa ramy na komponenty oraz ostrze.\\
+		\underline {Termin: 23.05 - 31.05}
+	\end{enumerate}
+	\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{gantt.png}
+	\caption{Wykres Gantta}
+	\end{figure}
+	
+	
+	\section{Opis kamieni milowych}
+	
+	\begin{enumerate}
+	
+	\item \textbf{Implementacje głównej pętli programu (połączenie akcelerometru z układem DAC).}
+	Duża część pracy związana z tym punktem, będzie zawierać się w podstawowej implementacji przyrządów zewnętrznych. Gdy etap implementacji obsługi akcelerometru i DACa zostanie zakończony, to kolejnym krokiem będzie implementacja podstawowej pętli, na bazie której układ będzie generował dźwięk w zależności od ruchu.
+	
+	\item \textbf{Rozbudowa głównej pętli programu o obsługę pamięci flash i wyboru koloru z palety.}
+	Pierwszy kamień milowy jest podstawą do działania całego projektu. W rozszerzonej wersji planowane jest odtwarzanie dźwięków których generowanie za pomocą mikrokontrolera jest bardzo trudne, mianowicie dźwięki otwierania, zamykania i uderzenia miecza. Dodatkową funkcjonalnością jest możliwość wyboru dowolnego koloru z palety True color (24-bit) przez użytkownika. Kiedy ten etap zostanie zrealizowany będzie można zbudować prototypową ramę na ostrze oraz urządzenia niezbędne do samowystarczalnego działania miecza.
+	
+	\end{enumerate}
+	
+\newpage
+\section{Podział pracy} %tutaj też zakres prac 
+	
+	\begin{itemize}
+		\item Patryk Knapik:
+			\begin{enumerate}
+				\item Implementacja obsługi DAC.
+				\item Implementacja obsługi pamięci flash oraz komunikacji USB.
+			\end{enumerate}
+		\item Wojciech Kosicki:
+			\begin{enumerate}
+				\item Implementacja obsługi akcelerometru.
+				\item Implementacja wyboru koloru z palety True color (24-bit).
+				\item Budowa ramy.
+			\end{enumerate}
+		\item Zadania wspólne:
+			\begin{enumerate}
+				\item Opracowanie algorytmu generującego dźwięk zbliżony do dźwięku miecza świetlnego.
+				\item Implementacja głównej pętli programu.
+				\item Opracowanie wstępnej dokumentacji technicznej.
+				\item Rozbudowa głównej pętli programu.
+				\item Opracowanie finalnej dokumentacji technicznej.
+			\end{enumerate}
+	\end{itemize}
+
+\section{Podsumowanie}
+Temat projektu został dobrany w taki sposób, aby opanować podstawowe umiejętności programowania mikrokontrolerów STM32 jednocześnie tworząc coś ciekawego i zjawiskowego. Na całym świecie miliony fanów szermierki na miecze świetlne walczą ze sobą bronią symulującą wygląd miecza świetlnego. Pomimo takiej popularności i widowiskowości, nie stworzono do tej pory systemu, który by generował charakterystyczny dźwięk tego oręża. Projekt będzie próbą wyjścia na przeciw tym problemom. 
+
+Z uwagi na mnogość peryferiów i małe doświadczenie konstruktorów, projekt ten może być nie małym wyzwaniem.
+Niezależnie od komplikacji, plan realizacji zadań projektowych został podzielony pomiędzy dwójkę wykonującą zadanie, w zamyśle był równy podział prac, więc może podlegać on zmianom w taki sposób, żeby to założenie zostało spełnione.
+\newpage
+\addcontentsline{toc}{section}{Bibilografia}
+\bibliography{bibliografia}
+\bibliographystyle{plain}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

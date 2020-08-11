@@ -1,0 +1,81 @@
+Configuration	arm_firmware
+STM32CubeMX 	4.25.0
+Date	06/12/2018
+MCU	STM32L476VGTx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+DFSDM1:Channel 0	Parallel input	DFSDM1_VS_IN0	VP_DFSDM1_VS_IN0
+DFSDM1:Channel 1	Parallel input	DFSDM1_VS_IN1	VP_DFSDM1_VS_IN1
+DFSDM1:Channel 2	Parallel input	DFSDM1_VS_IN2	VP_DFSDM1_VS_IN2
+I2C1	I2C	I2C1_SCL	PB6
+I2C1	I2C	I2C1_SDA	PB7
+SAI1:SAI A	Master with Master Clock Out	SAI1_SD_A	PE6
+SAI1:SAI A	Master with Master Clock Out	SAI1_SCK_A	PE5
+SAI1:SAI A	Master with Master Clock Out	SAI1_FS_A	PE4
+SAI1:SAI A	Master with Master Clock Out	SAI1_MCLK_A	PE2
+SPI2	Half-Duplex Master	SPI2_MOSI	PD4
+SPI2	Half-Duplex Master	SPI2_SCK	PD1
+SYS	Serial Wire	SYS_JTCK-SWCLK	PA14 (JTCK-SWCLK)
+SYS	Serial Wire	SYS_JTMS-SWDIO	PA13 (JTMS-SWDIO)
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+USART2	Asynchronous	USART2_RX	PD6
+USART2	Asynchronous	USART2_TX	PD5
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+1	PE2	SAI1_MCLK_A	SAI1_MCK [CS43L22_MCLK]
+2	PE3	GPIO_Output	AUDIO_RST [CS43L22_RESET]
+3	PE4	SAI1_FS_A	SAI1_FS [CS43L22_LRCK]
+4	PE5	SAI1_SCK_A	SAI1_SCK [CS43L22_SCLK]
+5	PE6	SAI1_SD_A	SAI1_SD [CS43L22_SDIN]
+15	PC0	GPIO_Output	MAG_CS [LSM303CTR_MAG_INT]
+16	PC1	GPIO_Input	MAG_INT [LSM303CTR_MAG_INT]
+17	PC2	GPIO_Input	MAG_DRDY [LSM303CTR_DRDY_MAG]
+37	PB2	GPIO_Output	LD_R [LED red]
+39	PE8	GPIO_Output	LD_G [LED_Green]
+72	PA13 (JTMS-SWDIO)	SYS_JTMS-SWDIO	SWDIO
+76	PA14 (JTCK-SWCLK)	SYS_JTCK-SWCLK	SWCLK
+81	PD0	GPIO_EXTI0	EXT_RST [SSM-104-L-DH_EXT_RST]
+82	PD1	SPI2_SCK	MEMS_SCK [L3GD20_SCL/SPC]
+83	PD2	GPIO_EXTI2	GYRO_INT1 [L3GD20_INT1]
+84	PD3*	SPI2_MISO	MEMS_MISO [L3GD20_SA0/SDO]
+85	PD4	SPI2_MOSI	MEMS_MOSI [L3GD20_SDA/SDI/SDO]
+86	PD5	USART2_TX	USART_TX
+87	PD6	USART2_RX	USART_RX
+88	PD7	GPIO_Output	GYRO_CS [L3GD20_CS_I2C/SPI]
+92	PB6	I2C1_SCL	I2C1_SCL [SSM-104-L-DH_SCL]
+93	PB7	I2C1_SDA	I2C1_SDA [SSM-104-L-DH_SDA]
+95	PB8	GPIO_EXTI8	GYRO_INT2 [L3D20_DRDY/INT2]
+97	PE0	GPIO_Output	XL_CS [LSM303CTR_CS_XL]
+98	PE1	GPIO_EXTI1	XL_INT [LSM303CTR_INT_XL]
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : arm_firmware
+Project Folder : /Users/qatrick/Documents/Projekty PWR/mieczswietlny-sterownikirobotow/software/arm_firmware
+Toolchain / IDE : SW4STM32
+Firmware Package Name and Version : STM32Cube FW_L4 V1.11.0
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy only the necessary library files
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : Yes
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : Balanced Size/Speed
+
+
+
+
+
+
